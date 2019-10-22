@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 const User = mongoose.model("User");
 
@@ -38,20 +39,45 @@ module.exports = {
 					if (!user || err) {
 						return res
 							.status(400)
-							.send({ error: "Usuário não encontrado." });
+							.send({ error: "User not found." });
 					}
 
 					user.comparePassword(senha, function(err, isMatch) {
 						if (err) throw err;
 						if (isMatch) {
+							jwt.sign(
+								{ user: user._id },
+								process.env.JWT_SECRET,
+								function(err, token) {
+									if (err) {
+										res.status(400).send({
+											error: "Can't generate user token.",
+										});
+									}
+									return res.send({
+										auth: isMatch,
+										token,
+									});
+								},
+							);
 						}
-						return res.send({
-							usuario: isMatch,
-						});
 					});
 				});
 		} catch (error) {
 			return res.status(400).send({ msg: "Login error." });
+		}
+	},
+
+	async authToken(req, res) {
+		const { token } = req.body;
+
+		try {
+			jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
+				if (err) res.status(400).send({ error: "Can't decode token." });
+				if (decoded) res.send({ auth: true });
+			});
+		} catch (error) {
+			res.status(400).send({ error: "This is not a valid token." });
 		}
 	},
 };
