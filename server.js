@@ -1,3 +1,5 @@
+require("dotenv/config");
+
 const express = require("express");
 const mongoose = require("mongoose");
 const requireDir = require("require-dir");
@@ -8,7 +10,7 @@ app.use(express.json());
 
 //Iniciando o DB
 mongoose.set("useUnifiedTopology", true);
-mongoose.connect("mongodb://localhost:27017/quebragalho", {
+mongoose.connect(process.env.MONGO_URL, {
 	useNewUrlParser: true,
 });
 
