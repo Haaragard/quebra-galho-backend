@@ -10,6 +10,7 @@ app.use(express.json());
 
 //Iniciando o DB
 mongoose.set("useUnifiedTopology", true);
+mongoose.set("createIndexes", true);
 mongoose.connect(process.env.MONGO_URL, {
 	useNewUrlParser: true,
 });
