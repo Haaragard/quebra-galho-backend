@@ -5,7 +5,10 @@ const UserController = require("../controllers/UserController");
 
 routes.get("/users", UserController.index);
 
+routes.post("/user/token", UserController.getUserByToken);
+
 routes.post("/users", UserController.store);
+
 routes.post("/auth/login", UserController.authenticate);
 routes.post("/auth/token", UserController.authToken);
 
