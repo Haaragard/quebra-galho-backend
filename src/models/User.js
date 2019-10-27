@@ -2,56 +2,58 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
-	cpf: {
-		type: String,
-		required: true,
-		index: { unique: true },
-	},
-	nome: {
-		type: String,
-		required: true,
-		index: true,
-	},
-	sobrenome: {
-		type: String,
-		required: true,
-		index: true,
-	},
-	email: {
-		type: String,
-		required: true,
-		lowercase: true,
-		index: { unique: true },
-	},
-	senha: {
-		type: String,
-		required: true,
-		select: false,
-	},
-	avatar: {
-		type: String,
-		required: false,
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now,
-	},
+    cpf: {
+        type: String,
+        required: true,
+        index: { unique: true }
+    },
+    nome: {
+        type: String,
+        required: true,
+        index: true
+    },
+    sobrenome: {
+        type: String,
+        required: true,
+        index: true
+    },
+    email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        index: { unique: true }
+    },
+    senha: {
+        type: String,
+        required: true,
+        select: false
+    },
+    avatar: {
+        type: String,
+        required: false
+    },
+    profissao: [String],
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 UserSchema.pre("save", async function(next) {
-	const hash = await bcrypt.hash(this.senha, 10);
-	this.senha = hash;
+    const hash = await bcrypt.hash(this.senha, 10);
+    this.senha = hash;
 
-	next();
+    next();
 });
 
 UserSchema.methods = {
-	comparePassword: function(candidatePassword, cb) {
-		bcrypt.compare(candidatePassword, this.senha, function(err, isMatch) {
-			if (err) return cb(err);
-			cb(null, isMatch);
-		});
-	},
+    comparePassword: function(candidatePassword, cb) {
+        bcrypt.compare(candidatePassword, this.senha, function(err, isMatch) {
+            if (err) return cb(err);
+            cb(null, isMatch);
+        });
+    }
 };
 
 mongoose.model("User", UserSchema);

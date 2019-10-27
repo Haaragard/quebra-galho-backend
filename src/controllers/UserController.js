@@ -33,7 +33,7 @@ module.exports = {
     async authenticate(req, res) {
         const { email, senha } = req.body;
         try {
-            const user = await User.findOne({ email })
+            await User.findOne({ email })
                 .select("+senha")
                 .exec(function(err, user) {
                     if (!user || err) {
