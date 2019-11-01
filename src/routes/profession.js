@@ -7,6 +7,6 @@ routes.get("/list", ProfessionController.index);
 // routes.get("/list/page", ProfessionController.listWithPage);
 // routes.get("/list/user", ProfessionController.listByUser);
 
-// routes.post("/store", ProfessionController.store);
+routes.post("/store", ProfessionController.store);
 
 module.exports = routes;

@@ -12,4 +12,6 @@ routes.post("/store", UserController.store);
 routes.post("/auth/login", UserController.authenticate);
 routes.post("/auth/token", UserController.authToken);
 
+routes.post("/add/profession", UserController.addProfession);
+
 module.exports = routes;
