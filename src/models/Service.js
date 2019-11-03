@@ -1,22 +1,31 @@
 const mongoose = require("mongoose");
 
 const ServiceSchema = new mongoose.Schema({
-    idContratante: {
-        type: String,
-        required: true
-    },
-    idContratado: {
-        type: String,
-        required: true
-    },
-    nome: {
-        type: String,
-        required: true
-    },
-    descricao: {
-        type: String,
-        required: false
-    }
+	_userId: {
+		type: mongoose.ObjectId,
+		required: true,
+		index: true,
+	},
+	nome: {
+		type: String,
+		required: true,
+	},
+	descricao: {
+		type: String,
+		required: false,
+	},
+	dataMarcada: {
+		type: Date,
+	},
+	statusExecucao: {
+		type: Boolean,
+		default: false,
+	},
+	fotos: [String],
+	createdAt: {
+		type: Date,
+		default: Date.now,
+	},
 });
 
 mongoose.model("Service", ServiceSchema);

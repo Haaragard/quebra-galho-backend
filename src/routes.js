@@ -10,4 +10,6 @@ routes.use("/profession", require("./routes/profession"));
 //Services
 routes.use("/service", require("./routes/service"));
 
+//Services
+routes.use("/hiredService", require("./routes/hiredService"));
 module.exports = routes;
