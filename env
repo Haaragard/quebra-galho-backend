@@ -1,0 +1,4 @@
+APP_URL=http://localhost:3001
+MONGO_URL=mongodb://localhost:27017/QuebraGalhoApi
+AWS_DEFAULT_REGION=us-east-1
+JWT_SECRET=dev
