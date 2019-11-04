@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Profession = mongoose.model("Profession");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
