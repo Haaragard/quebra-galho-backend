@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
 		lowercase: true,
 		index: { unique: true },
 	},
+	dataNascimento: {
+		type: Date,
+		required: true,
+	},
 	senha: {
 		type: String,
 		required: true,
