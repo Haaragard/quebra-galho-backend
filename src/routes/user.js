@@ -1,4 +1,7 @@
 const express = require("express");
+const multer = require("multer");
+const multerConfig = require("../config/multer");
+
 const routes = express.Router();
 
 const UserController = require("../controllers/UserController");
@@ -13,5 +16,11 @@ routes.post("/auth/login", UserController.authenticate);
 routes.post("/auth/token", UserController.authToken);
 
 routes.post("/add/profession", UserController.addProfession);
+
+routes.post(
+	"/update/avatar",
+	multer(multerConfig).single("file"),
+	UserController.updateAvatar,
+);
 
 module.exports = routes;

@@ -1,4 +1,4 @@
-require("dotenv/config");
+require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -7,6 +7,7 @@ const requireDir = require("require-dir");
 // Iniciando o App
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //Iniciando o DB
 mongoose.set("useUnifiedTopology", true);

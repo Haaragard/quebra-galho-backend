@@ -140,4 +140,26 @@ module.exports = {
 	async addService(req, res) {
 		const { data } = req.body;
 	},
+
+	async updateAvatar(req, res) {
+		return res.status(400).send({ error: req.file });
+
+		const { user } = req.body;
+		const avatar = req.file.filename;
+
+		try {
+			await User.findByIdAndUpdate(user._id, { avatar: avatar }, function(
+				err,
+				user,
+			) {
+				if (err || !user)
+					return res
+						.status(400)
+						.send({ error: "Ocurred a error while updating avatar." });
+				return res.send({ user });
+			});
+		} catch (error) {
+			return res.status(400).send({ error: "Couldn't update user avatar." });
+		}
+	},
 };

@@ -21,6 +21,9 @@ const ServiceSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
+	fotoPrincipal: {
+		type: String,
+	},
 	fotos: [String],
 	createdAt: {
 		type: Date,
