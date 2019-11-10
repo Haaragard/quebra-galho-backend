@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 const User = mongoose.model("User");
 const Profession = mongoose.model("Profession");
@@ -88,6 +89,7 @@ module.exports = {
 							return res.status(400).send({
 								error: "This is not a valid token.",
 							});
+						user._id = decoded.user;
 						return res.send({ auth: true, user: user });
 					});
 				}
@@ -142,22 +144,34 @@ module.exports = {
 	},
 
 	async updateAvatar(req, res) {
-		return res.status(400).send({ error: req.file });
-
-		const { user } = req.body;
-		const avatar = req.file.filename;
-
+		const { filename } = req.file;
+		const user = JSON.parse(req.body.user);
 		try {
-			await User.findByIdAndUpdate(user._id, { avatar: avatar }, function(
-				err,
-				user,
-			) {
-				if (err || !user)
-					return res
-						.status(400)
-						.send({ error: "Ocurred a error while updating avatar." });
-				return res.send({ user });
-			});
+			await User.updateOne(
+				{ _id: mongoose.Types.ObjectId(user._id) },
+				{ avatar: filename },
+				async function(err, result) {
+					if (err)
+						return res
+							.status(400)
+							.send({ error: "Ocurred a error while updating avatar." });
+
+					if (user.avatar) {
+						user.avatar = `./images/user/avatar/${user.avatar}`;
+						await fs.access(user.avatar, error => {
+							fs.unlink(user.avatar, function(error) {});
+						});
+					}
+
+					await User.findById(user._id, function(err, user) {
+						if (err)
+							return res
+								.status(400)
+								.send({ error: "Ocurred a error while updating avatar." });
+						return res.send({ user: user });
+					});
+				},
+			);
 		} catch (error) {
 			return res.status(400).send({ error: "Couldn't update user avatar." });
 		}

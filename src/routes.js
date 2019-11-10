@@ -1,6 +1,12 @@
 const express = require("express");
 const routes = express.Router();
 
+//User Avatars
+routes.use(
+	"/images/user/avatar",
+	express.static(__dirname + "/../images/user/avatar/"),
+);
+
 //Users
 routes.use("/user", require("./routes/user"));
 
@@ -10,6 +16,6 @@ routes.use("/profession", require("./routes/profession"));
 //Services
 routes.use("/service", require("./routes/service"));
 
-//Services
+//Hired Services
 routes.use("/hiredService", require("./routes/hiredService"));
 module.exports = routes;

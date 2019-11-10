@@ -18,7 +18,7 @@ routes.post("/auth/token", UserController.authToken);
 routes.post("/add/profession", UserController.addProfession);
 
 routes.post(
-	"/update/avatar",
+	"/avatar/upload",
 	multer(multerConfig).single("file"),
 	UserController.updateAvatar,
 );
