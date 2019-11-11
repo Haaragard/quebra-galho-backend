@@ -60,7 +60,7 @@ module.exports = {
 					});
 				});
 		} catch (error) {
-			return res.status(400).send({ msg: "Login error." });
+			return res.status(400).send({ error: "Login error." });
 		}
 	},
 
@@ -170,6 +170,27 @@ module.exports = {
 								.send({ error: "Ocurred a error while updating avatar." });
 						return res.send({ user: user });
 					});
+				},
+			);
+		} catch (error) {
+			return res.status(400).send({ error: "Couldn't update user avatar." });
+		}
+	},
+
+	async updateLocation(req, res) {
+		const { user } = req.body;
+
+		try {
+			await User.updateOne(
+				{ _id: mongoose.Types.ObjectId(user._id) },
+				{ latitude: user.latitude, longitude: user.longitude },
+				function(err, result) {
+					if (err)
+						return res
+							.status(400)
+							.send({ error: "Ocurred a error while updating user location." });
+
+					return res.send({ msg: "User location updated with success." });
 				},
 			);
 		} catch (error) {

@@ -23,8 +23,8 @@ module.exports = {
 					return res.status(400).send({ error: "Service doesn't exists." });
 			});
 			let hiredService = {
-				_userId: user._id,
-				_serviceId: service._id,
+				_userId: mongoose.Types.ObjectId(user._id),
+				_serviceId: mongoose.Types.ObjectId(service._id),
 			};
 
 			let newHiredService = await HiredService.create(hiredService);

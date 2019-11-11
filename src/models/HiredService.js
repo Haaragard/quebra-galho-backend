@@ -11,6 +11,13 @@ const HiredServiceSchema = new mongoose.Schema({
 		required: true,
 		index: true,
 	},
+	dataMarcada: {
+		type: Date,
+	},
+	statusExecucao: {
+		type: Boolean,
+		default: false,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

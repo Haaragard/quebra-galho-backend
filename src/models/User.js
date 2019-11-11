@@ -42,6 +42,16 @@ const UserSchema = new mongoose.Schema({
 			},
 		},
 	],
+	latitude: {
+		type: String,
+	},
+	longitude: {
+		type: String,
+	},
+	pais: {
+		type: String,
+		default: String("Brasil"),
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

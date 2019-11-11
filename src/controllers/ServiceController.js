@@ -3,80 +3,102 @@ const mongoose = require("mongoose");
 const Service = mongoose.model("Service");
 
 module.exports = {
-  async index(req, res) {
-    const services = await Service.find();
+	async index(req, res) {
+		const services = await Service.find();
 
-    return res.json(services);
-  },
+		return res.json(services);
+	},
 
-  async store(req, res) {
-    const { user, service } = req.body;
-    try {
-      if (await Service.findOne({ _userId: user._id, nome: service.nome })) {
-        return res.status(400).send({ error: "Service already exists." });
-      }
+	async findById(req, res) {
+		const { service } = req.body;
 
-      service._userId = user._id;
+		try {
+			await Service.findById(service._id, function(err, service) {
+				if (err)
+					return res.status(400).send({ error: "Couldn't find this service." });
 
-      let newService = await Service.create(service);
+				res.send({ service });
+			});
+		} catch (error) {
+			return res
+				.status(400)
+				.send({ error: "Ocurred an error while searching for service." });
+		}
+	},
 
-      return res.send(newService);
-    } catch (error) {
-      return res.status(400).send({ error: "Registration failed." });
-    }
-  },
+	async store(req, res) {
+		const { user, service } = req.body;
+		try {
+			if (
+				await Service.findOne({
+					_userId: mongoose.Types.ObjectId(user._id),
+					nome: service.nome,
+				})
+			) {
+				return res.status(400).send({ error: "Service already exists." });
+			}
 
-  async totalList(req, res) {
-    const { service } = req.body;
+			service._userId = mongoose.Types.ObjectId(user._id);
 
-    await Service.count(service).exec(function(err, total) {
-      if (err)
-        res.status(400).send({
-          error: "Can't count total of this list."
-        });
+			let newService = await Service.create(service);
 
-      res.send({ total: total });
-    });
-  },
+			return res.send(newService);
+		} catch (error) {
+			return res.status(400).send({ error: "Registration failed." });
+		}
+	},
 
-  async list(req, res) {
-    const { service, list } = req.body;
+	async totalList(req, res) {
+		const { service } = req.body;
 
-    await Service.find(service)
-      .limit(list.limit)
-      .skip(list.limit * list.page)
-      .exec(function(err, services) {
-        if (err) res.status(400).send({ error: "Can't list services." });
+		await Service.count(service).exec(function(err, total) {
+			if (err)
+				res.status(400).send({
+					error: "Can't count total of this list.",
+				});
 
-        res.send({ services: services });
-      });
-  },
+			res.send({ total: total });
+		});
+	},
 
-  async listMostAccess(req, res) {
-    const { service, list } = req.body;
+	async list(req, res) {
+		const { service, list } = req.body;
 
-    await Service.find(service)
-      .limit(list.limit)
-      .skip(list.limit * list.page)
-      .exec(function(err, services) {
-        if (err) res.status(400).send({ error: "Can't list services." });
+		await Service.find(service)
+			.limit(list.limit)
+			.skip(list.limit * list.page)
+			.exec(function(err, services) {
+				if (err) res.status(400).send({ error: "Can't list services." });
 
-        res.send({ services: services });
-      });
-  },
+				res.send({ services: services });
+			});
+	},
 
-  async listGeoLocation(req, res) {
-    const { service, list } = req.body;
+	async listMostAccess(req, res) {
+		const { service, list } = req.body;
 
-    res.send("not implemented");
+		await Service.find(service)
+			.limit(list.limit)
+			.skip(list.limit * list.page)
+			.exec(function(err, services) {
+				if (err) res.status(400).send({ error: "Can't list services." });
 
-    await Service.find(service)
-      .limit(list.limit)
-      .skip(list.limit * list.page)
-      .exec(function(err, services) {
-        if (err) res.status(400).send({ error: "Can't list services." });
+				res.send({ services: services });
+			});
+	},
 
-        res.send({ services: services });
-      });
-  }
+	async listGeoLocation(req, res) {
+		const { service, list } = req.body;
+
+		res.send("not implemented");
+
+		await Service.find(service)
+			.limit(list.limit)
+			.skip(list.limit * list.page)
+			.exec(function(err, services) {
+				if (err) res.status(400).send({ error: "Can't list services." });
+
+				res.send({ services: services });
+			});
+	},
 };
