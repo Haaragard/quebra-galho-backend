@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const fs = require("fs");
 
 const Service = mongoose.model("Service");
 
@@ -27,7 +28,9 @@ module.exports = {
 	},
 
 	async store(req, res) {
-		const { user, service } = req.body;
+		const user = JSON.parse(req.body.user);
+		const service = JSON.parse(req.body.service);
+
 		try {
 			if (
 				await Service.findOne({
@@ -35,15 +38,38 @@ module.exports = {
 					nome: service.nome,
 				})
 			) {
+				req.files.map(async (value, index) => {
+					let imageToDelete = `./images/service/${value.filename}`;
+					await fs.access(imageToDelete, error => {
+						fs.unlink(imageToDelete, function(error) {});
+					});
+				});
 				return res.status(400).send({ error: "Service already exists." });
 			}
 
+			if (!service._id) service._id = undefined;
+
+			req.files.map((value, index) => {
+				if (!service.fotos[0]) service.fotos.shift();
+				if (value.fieldname === "files[]") {
+					service.fotos.push(value.filename);
+				} else if (value.fieldname === "imagePrincipal") {
+					service.fotoPrincipal = value.filename;
+				}
+			});
+
 			service._userId = mongoose.Types.ObjectId(user._id);
 
-			let newService = await Service.create(service);
+			await Service.create(service);
 
-			return res.send(newService);
+			return res.send({ msg: "Registered successfully." });
 		} catch (error) {
+			req.files.map(async (value, index) => {
+				let imageToDelete = `./images/service/${value.filename}`;
+				await fs.access(imageToDelete, error => {
+					fs.unlink(imageToDelete, function(error) {});
+				});
+			});
 			return res.status(400).send({ error: "Registration failed." });
 		}
 	},
@@ -62,29 +88,51 @@ module.exports = {
 	},
 
 	async list(req, res) {
-		const { service, list } = req.body;
+		const { service, list, count } = req.body;
 
-		await Service.find(service)
-			.limit(list.limit)
-			.skip(list.limit * list.page)
-			.exec(function(err, services) {
-				if (err) res.status(400).send({ error: "Can't list services." });
+		if (count) {
+			await Service.count(service).exec(function(err, total) {
+				if (err)
+					res.status(400).send({
+						error: "Can't count total of this list.",
+					});
 
-				res.send({ services: services });
+				res.send({ total: total });
 			});
+		} else {
+			await Service.find(service)
+				.limit(list.limit)
+				.skip(list.limit * list.page)
+				.exec(function(err, services) {
+					if (err) res.status(400).send({ error: "Can't list services." });
+
+					res.send({ services: services });
+				});
+		}
 	},
 
 	async listMostAccess(req, res) {
 		const { service, list } = req.body;
 
-		await Service.find(service)
-			.limit(list.limit)
-			.skip(list.limit * list.page)
-			.exec(function(err, services) {
-				if (err) res.status(400).send({ error: "Can't list services." });
+		if (count) {
+			await Service.count(service).exec(function(err, total) {
+				if (err)
+					res.status(400).send({
+						error: "Can't count total of this list.",
+					});
 
-				res.send({ services: services });
+				res.send({ total: total });
 			});
+		} else {
+			await Service.find(service)
+				.limit(list.limit)
+				.skip(list.limit * list.page)
+				.exec(function(err, services) {
+					if (err) res.status(400).send({ error: "Can't list services." });
+
+					res.send({ services: services });
+				});
+		}
 	},
 
 	async listGeoLocation(req, res) {

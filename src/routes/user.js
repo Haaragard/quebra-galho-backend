@@ -21,7 +21,7 @@ routes.post("/update/location", UserController.updateLocation);
 
 routes.post(
 	"/avatar/upload",
-	multer(multerConfig).single("file"),
+	multer(multerConfig.MulterConfigAvatar).single("file"),
 	UserController.updateAvatar,
 );
 

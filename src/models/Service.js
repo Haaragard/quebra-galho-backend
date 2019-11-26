@@ -22,6 +22,10 @@ const ServiceSchema = new mongoose.Schema({
 		type: Number,
 		default: Number(0),
 	},
+	location: {
+		type: { type: String },
+		coordinates: [Number],
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

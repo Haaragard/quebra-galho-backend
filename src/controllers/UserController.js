@@ -178,12 +178,11 @@ module.exports = {
 	},
 
 	async updateLocation(req, res) {
-		const { user } = req.body;
-
+		const user = JSON.parse(req.body.user);
 		try {
 			await User.updateOne(
 				{ _id: mongoose.Types.ObjectId(user._id) },
-				{ latitude: user.latitude, longitude: user.longitude },
+				{ location: user.location },
 				function(err, result) {
 					if (err)
 						return res

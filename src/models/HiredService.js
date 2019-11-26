@@ -11,6 +11,10 @@ const HiredServiceSchema = new mongoose.Schema({
 		required: true,
 		index: true,
 	},
+	location: {
+		type: { type: String },
+		coordinates: [Number],
+	},
 	dataMarcada: {
 		type: Date,
 	},

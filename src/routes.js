@@ -7,6 +7,9 @@ routes.use(
 	express.static(__dirname + "/../images/user/avatar/"),
 );
 
+//User Avatars
+routes.use("/images/service", express.static(__dirname + "/../images/service"));
+
 //Users
 routes.use("/user", require("./routes/user"));
 
