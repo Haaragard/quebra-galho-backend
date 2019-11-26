@@ -63,3 +63,6 @@ typings/
 # Images
 images/user/avatar/*
 !images/user/avatar/
+
+images/service/*
+!images/service/
