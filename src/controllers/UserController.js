@@ -89,8 +89,8 @@ module.exports = {
 							return res.status(400).send({
 								error: "This is not a valid token.",
 							});
-						user._id = decoded.user;
-						return res.send({ auth: true, user: user });
+						if (user) user._id = decoded.user;
+						return res.send({ auth: user ? true : false, user: user });
 					});
 				}
 			});

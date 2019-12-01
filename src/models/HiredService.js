@@ -12,8 +12,8 @@ const HiredServiceSchema = new mongoose.Schema({
 		index: true,
 	},
 	location: {
-		type: { type: String },
-		coordinates: [Number],
+		type: { type: String, default: String("Point") },
+		coordinates: { type: [Number] },
 	},
 	dataMarcada: {
 		type: Date,
@@ -27,5 +27,7 @@ const HiredServiceSchema = new mongoose.Schema({
 		default: Date.now,
 	},
 });
+
+HiredServiceSchema.index({ location: "2dsphere" });
 
 mongoose.model("HiredService", HiredServiceSchema);

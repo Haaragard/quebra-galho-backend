@@ -23,13 +23,15 @@ const ServiceSchema = new mongoose.Schema({
 		default: Number(0),
 	},
 	location: {
-		type: { type: String },
-		coordinates: [Number],
+		type: { type: String, default: String("Point") },
+		coordinates: { type: [Number] },
 	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
 	},
 });
+
+ServiceSchema.index({ location: "2dsphere" });
 
 mongoose.model("Service", ServiceSchema);

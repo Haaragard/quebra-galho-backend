@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //Iniciando o DB
 mongoose.set("useUnifiedTopology", true);
-mongoose.set("createIndexes", true);
+mongoose.set("useCreateIndex", true);
 mongoose.connect(process.env.MONGO_URL, {
 	useNewUrlParser: true,
 });

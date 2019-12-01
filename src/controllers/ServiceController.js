@@ -112,35 +112,10 @@ module.exports = {
 	},
 
 	async listMostAccess(req, res) {
-		const { service, list } = req.body;
+		const { list } = req.body;
 
-		if (count) {
-			await Service.count(service).exec(function(err, total) {
-				if (err)
-					res.status(400).send({
-						error: "Can't count total of this list.",
-					});
-
-				res.send({ total: total });
-			});
-		} else {
-			await Service.find(service)
-				.limit(list.limit)
-				.skip(list.limit * list.page)
-				.exec(function(err, services) {
-					if (err) res.status(400).send({ error: "Can't list services." });
-
-					res.send({ services: services });
-				});
-		}
-	},
-
-	async listGeoLocation(req, res) {
-		const { service, list } = req.body;
-
-		res.send("not implemented");
-
-		await Service.find(service)
+		await Service.find()
+			.sort({ acessos: -1 })
 			.limit(list.limit)
 			.skip(list.limit * list.page)
 			.exec(function(err, services) {
@@ -148,5 +123,52 @@ module.exports = {
 
 				res.send({ services: services });
 			});
+	},
+
+	async listGeoLocation(req, res) {
+		const { location, list } = req.body;
+		const distance = 10000;
+
+		await Service.find({
+			location: {
+				$near: {
+					$maxDistance: distance,
+					$minDistance: 0,
+					$geometry: {
+						type: "Point",
+						coordinates: location,
+					},
+				},
+			},
+		})
+			.limit(list.limit)
+			.skip(list.limit * list.page)
+			.exec(function(err, services) {
+				if (err)
+					return res
+						.status(400)
+						.send({ error: "Can't list services.", distance: distance });
+
+				return res.send({ services: services, distance: distance });
+			});
+
+		return false;
+	},
+
+	async countAccessUp(req, res) {
+		const { service, access } = req.body;
+
+		console.log(service);
+		console.log(access);
+
+		await Service.find({
+			_id: mongoose.Types.ObjectId(service._id),
+		}).exec(function(err, service) {
+			if (err) return res.status(400).send({ error: "Can't get service." });
+
+			return res.send({ service: service });
+		});
+
+		return false;
 	},
 };

@@ -43,7 +43,7 @@ const UserSchema = new mongoose.Schema({
 		},
 	],
 	location: {
-		type: { type: String },
+		type: { type: String, default: String("Point") },
 		coordinates: [Number],
 	},
 	pais: {
@@ -71,5 +71,7 @@ UserSchema.methods = {
 		});
 	},
 };
+
+UserSchema.index({ location: "2dsphere" });
 
 mongoose.model("User", UserSchema);

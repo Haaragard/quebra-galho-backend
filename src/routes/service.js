@@ -19,4 +19,6 @@ routes.post("/list", ServiceController.list);
 routes.post("/list/mostAccess", ServiceController.listMostAccess);
 routes.post("/list/geoLocation", ServiceController.listGeoLocation);
 
+routes.post("/accesses/plus", ServiceController.countAccessUp);
+
 module.exports = routes;
