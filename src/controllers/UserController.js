@@ -196,4 +196,21 @@ module.exports = {
 			return res.status(400).send({ error: "Couldn't update user avatar." });
 		}
 	},
+
+	async findById(req, res) {
+		const { user } = req.body;
+
+		try {
+			await User.findById(user._id, function(err, user) {
+				if (err)
+					return res.status(400).send({ error: "Couldn't find this user." });
+
+				res.send({ user });
+			});
+		} catch (error) {
+			return res
+				.status(400)
+				.send({ error: "Ocurred an error while searching for user." });
+		}
+	},
 };

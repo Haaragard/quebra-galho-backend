@@ -8,6 +8,8 @@ const ServiceController = require("../controllers/ServiceController");
 
 routes.get("/list", ServiceController.index);
 
+routes.post("/getById", ServiceController.findById);
+
 routes.post(
 	"/store",
 	multer(multerConfig.MulterConfigServiceFotos).any(),

@@ -8,6 +8,8 @@ const UserController = require("../controllers/UserController");
 
 routes.get("/list", UserController.index);
 
+routes.post("/getById", UserController.findById);
+
 routes.post("/token", UserController.getUserByToken);
 
 routes.post("/store", UserController.store);

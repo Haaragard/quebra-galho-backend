@@ -26,6 +26,10 @@ const ServiceSchema = new mongoose.Schema({
 		type: { type: String, default: String("Point") },
 		coordinates: { type: [Number] },
 	},
+	valor: {
+		type: String,
+		default: "R$0",
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

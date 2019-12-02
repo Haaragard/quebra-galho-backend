@@ -155,18 +155,20 @@ module.exports = {
 		return false;
 	},
 
+	//Used for what? idfremember
 	async countAccessUp(req, res) {
 		const { service, access } = req.body;
 
-		console.log(service);
-		console.log(access);
+		await Service.updateOne(
+			{ _id: mongoose.Types.ObjectId(service._id) },
+			{ $inc: { acessos: 1 } },
+		).exec(function(err, result) {
+			if (err)
+				return res
+					.status(400)
+					.send({ error: "Can't increment service access." });
 
-		await Service.find({
-			_id: mongoose.Types.ObjectId(service._id),
-		}).exec(function(err, service) {
-			if (err) return res.status(400).send({ error: "Can't get service." });
-
-			return res.send({ service: service });
+			return res.send({ result });
 		});
 
 		return false;
